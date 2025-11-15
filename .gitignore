@@ -4,3 +4,4 @@ zig-out
 public
 node_modules
 compose.override.yml
+horizon
