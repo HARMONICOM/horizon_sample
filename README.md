@@ -1,6 +1,6 @@
-# Horizon Test
+# Horizon sample
 
-Test project for the Horizon web framework.
+Sample project for the Horizon web framework.
 
 ## Build and Run
 
@@ -8,7 +8,7 @@ Test project for the Horizon web framework.
 make up
 ```
 
-You can access it at `http://localhost:18017/`.
+You can access it at `http://localhost:5000/`.
 
 ## Project Structure
 

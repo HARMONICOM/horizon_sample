@@ -7,7 +7,7 @@ services:
     command: /bin/bash -c "bun install && bun run front:build && zig build run"
     environment:
       TZ: 'Asia/Tokyo'
-      PORT: 18017
+      PORT: 5000
       DB_USER: 'postgres'
       DB_PASSWORD: 'postgres'
       DB_HOST: 'db'
@@ -25,7 +25,7 @@ services:
       ADMIN_BASIC_AUTH_USERNAME: 'admin'
       ADMIN_BASIC_AUTH_PASSWORD: 'password123'
       VITE_API_KEY: 'apikey_apikey_apikey_apikey_apikey_apikey_apikey_apikey_apikey_apikey'
-      VITE_URL_PREFIX: 'http://localhost:18017'
+      VITE_URL_PREFIX: 'http://localhost:5000'
       VITE_ERROR_LOG: true
       VITE_PAYPAL_CLIENT_ID: 'test'
 

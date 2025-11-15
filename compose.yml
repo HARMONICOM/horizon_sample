@@ -21,7 +21,7 @@ services:
         max-size: '1G'
         max-file: '1'
     ports:
-      - "18017:18017"
+      - "5000:5000"
     restart: always
     ulimits:
       nofile:
