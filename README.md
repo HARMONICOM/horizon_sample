@@ -17,12 +17,17 @@ You can access it at `http://localhost:18017/`.
 ├── src/
 │   ├── main.zig                 # Application entry point
 │   ├── root.zig                 # Root module wiring
-│   ├── routes/
+│   ├── libs/                    # Library
+│   ├── models/                  # Models
+│   ├── routes/                  # Routes
+│   │   ├── admin.zig
 │   │   ├── index.zig
 │   │   └── routes.zig
-│   └── views/
+│   └── views/                   # Views
+│       ├── admin.zts
 │       └── index.zts
-├── frontend/                    # Horizon sample SPA
+├── frontend/                    # Sample frontend on React
+│   ├── admin.tsx
 │   ├── index.tsx
 │   ├── routes.tsx
 │   └── index.css
