@@ -1,0 +1,83 @@
+volumes:
+  pg_data:
+    driver: local
+
+services:
+  app:
+    build:
+      context: ./infra/docker/app
+      dockerfile: Dockerfile
+    command: /bin/bash -c "bun install && bun run front:build && zig build run"
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '1G'
+        max-file: '1'
+    ports:
+      - "18017:18017"
+    restart: always
+    ulimits:
+      nofile:
+        soft: "65536"
+        hard: "65536"
+    volumes:
+      - type: bind
+        source: .
+        target: /usr/src/app
+    working_dir: /usr/src/app
+
+  db:
+    build:
+      context: ./infra/docker/db
+      dockerfile: Dockerfile
+    healthcheck:
+      test: 'pg_isready -U postgres -d $$DB_DATABASE'
+      interval: 10s
+      retries: 6
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '1G'
+        max-file: '1'
+    restart: always
+    shm_size: "640mb"
+    ulimits:
+      nofile:
+        soft: "65536"
+        hard: "65536"
+    volumes:
+      - type: volume
+        source: pg_data
+        target: /var/lib/postgresql/data
+      - type: bind
+        source: ./infra/docker/db/docker-entrypoint-initdb.d
+        target: /docker-entrypoint-initdb.d
+
+  cache:
+    image: redis:8.0.2-bookworm
+    command: ['redis-server', '/etc/redis/redis.conf']
+    healthcheck:
+      test: 'redis-cli ping'
+      interval: 10s
+      retries: 6
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '1G'
+        max-file: '1'
+    restart: always
+    ulimits:
+      nofile:
+        soft: "65536"
+        hard: "65536"
+    volumes:
+      - type: bind
+        source: ./infra/docker/cache/redis.conf
+        target: /etc/redis/redis.conf

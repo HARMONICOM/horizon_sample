@@ -1,0 +1,23 @@
+@import 'tailwindcss' important;
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  @apply bg-stone-100 dark:bg-stone-900 text-stone-900 dark:text-stone-100;
+}
+
+a.link {
+  @apply text-blue-500 underline dark:text-blue-400;
+}
+
+a.link:hover {
+  @apply text-blue-600 dark:text-blue-200;
+}
+
+.grid-parts {
+  @apply p-4 border border-orange-700/30 dark:border-orange-300/20 rounded-md
+}
+
+.annotation {
+  text-indent: -0.8em;
+  padding-left: 0.8em;
+}

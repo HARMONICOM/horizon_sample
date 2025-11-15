@@ -1,0 +1,63 @@
+volumes:
+  pgadmin_data:
+    driver: local
+
+services:
+  app:
+    command: /bin/bash -c "bun install && bun run front:build && zig build run"
+    environment:
+      TZ: 'Asia/Tokyo'
+      PORT: 18017
+      DB_USER: 'postgres'
+      DB_PASSWORD: 'postgres'
+      DB_HOST: 'db'
+      DB_DATABASE: 'horizon_sample'
+      CACHE_HOST: 'cache'
+      CACHE_DB_NUMBER: 0
+      CACHE_CONNECTION_TIMEOUT_MSECCONDS: 3000  # msec
+      CACHE_TTL_SECONDS: 60  # sec
+      SESSION_ENCRYPTION_KEY: 'session_encryption_key_session_encryption_key_session_encryption_key'
+      SESSION_EXPIRE_SECONDS: 1296000  # 15 days
+      MAIL_HOST: 'mailpit'
+      MAIL_PORT: 1025
+      MAIL_USERNAME: ''
+      MAIL_PASSWORD: ''
+      ADMIN_BASIC_AUTH_USERNAME: 'admin'
+      ADMIN_BASIC_AUTH_PASSWORD: 'password123'
+      VITE_API_KEY: 'apikey_apikey_apikey_apikey_apikey_apikey_apikey_apikey_apikey_apikey'
+      VITE_URL_PREFIX: 'http://localhost:18017'
+      VITE_ERROR_LOG: true
+      VITE_PAYPAL_CLIENT_ID: 'test'
+
+  db:
+    environment:
+      DB_DATABASE: 'horizon_sample'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_INITDB_ARGS: '--encoding=UTF-8 --locale=C.UTF-8'
+      TZ: Asia/Tokyo
+    ports:
+      - "5432:5432"
+
+  mailpit:
+    environment:
+      TZ: 'Asia/Tokyo'
+    image: axllent/mailpit:latest
+    ports:
+      - "25016:8025"
+
+  pgadmin:
+    environment:
+      PGADMIN_CONFIG_MAIL_SERVER: "'mailpit'"
+      PGADMIN_CONFIG_MAIL_PORT: 1025
+      PGADMIN_DEFAULT_EMAIL: 'yamamotok@harmonicom.jp'
+      PGADMIN_DEFAULT_PASSWORD: 'pgadmin'
+      TZ: 'Asia/Tokyo'
+    image: dpage/pgadmin4:latest
+    ports:
+      - "54016:80"
+    volumes:
+      - type: volume
+        source: pgadmin_data
+        target: /var/lib/pgadmin
+
+  autoheal: !reset
