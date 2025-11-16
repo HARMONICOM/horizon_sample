@@ -18,13 +18,21 @@ You can access it at `http://localhost:5000/`.
 │   ├── main.zig                 # Application entry point
 │   ├── root.zig                 # Root module wiring
 │   ├── libs/                    # Library
+│   │   └── db.zig
 │   ├── models/                  # Models
+│   │   └── test.zig
 │   ├── routes/                  # Routes
-│   │   ├── admin.zig
+│   │   ├── admin/               # Admin routes
+│   │   │   ├── index.zig
+│   │   │   └── routes.zig
+│   │   ├── api/                 # API routes
+│   │   │   ├── index.zig
+│   │   │   └── routes.zig
 │   │   ├── index.zig
 │   │   └── routes.zig
 │   └── views/                   # Views
-│       ├── admin.zts
+│       ├── admin/               # Admin views
+│       │   └── index.zts
 │       └── index.zts
 ├── frontend/                    # Sample frontend on React
 │   ├── admin.tsx
