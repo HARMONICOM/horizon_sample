@@ -11,8 +11,16 @@ ifneq ($(OS),Windows_NT)
 endif
 
 # Adjust file permissions
-ap:
+adjust:
 	docker compose run --rm app chown -f -R $(USER_ID):$(GROUP_ID) . | true
+
+setup:
+ifeq ($(wildcard compose.override.yml),)
+	${CP} compose.override.sample.yml compose.override.yml
+	docker compose build --no-cache
+else
+	@echo "compose.override.yml already exists."
+endif
 
 build:
 	docker compose build
@@ -23,12 +31,17 @@ build-nocache:
 resetdb:
 	make down
 	docker volume rm horizon_sample_pg_data | true
+	docker volume rm horizon_sample_mysql_data | true
 
 up:
 	docker compose up -d
 
 down:
 	docker compose down
+
+exec:
+	docker compose exec $(filter-out $@,$(MAKECMDGOALS))
+	@exit 3
 
 run:
 	docker compose run --rm --service-ports app $(filter-out $@,$(MAKECMDGOALS))

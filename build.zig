@@ -20,14 +20,18 @@ pub fn build(b: *std.Build) void {
     // of this build script using `b.option()`. All defined flags (including
     // target and optimize options) will be listed when running `zig build --help`
     // in this directory.
-    const horizon_dep = b.dependency("horizon", .{
+    const horizon = b.dependency("horizon", .{
         .target = target,
         .optimize = optimize,
     });
 
-    const pg_dep = b.dependency("pg", .{
+    const dig = b.dependency("dig", .{
         .target = target,
         .optimize = optimize,
+        // Enable database drivers as needed (both disabled by default)
+        // This example uses PostgreSQL
+        .postgresql = true,
+        // .mysql = true,  // Uncomment if MySQL is needed
     });
 
     // This creates a module, which represents a collection of source files alongside
@@ -37,7 +41,7 @@ pub fn build(b: *std.Build) void {
     // to our consumers. We must give it a name because a Zig package can expose
     // multiple modules and consumers will need to be able to specify which
     // module they want to access.
-    const mod = b.addModule("horizon_test", .{
+    const mod = b.addModule("horizon_sample", .{
         // The root source file is the "entry point" of this module. Users of
         // this module will only be able to access public declarations contained
         // in this file, which means that if you have declarations that you
@@ -67,7 +71,7 @@ pub fn build(b: *std.Build) void {
     // If neither case applies to you, feel free to delete the declaration you
     // don't need and to put everything under a single module.
     const exe = b.addExecutable(.{
-        .name = "horizon_test",
+        .name = "horizon_sample",
         .root_module = b.createModule(.{
             // b.createModule defines a new module just like b.addModule but,
             // unlike b.addModule, it does not expose the module to consumers of
@@ -82,17 +86,17 @@ pub fn build(b: *std.Build) void {
             // List of modules available for import in source files part of the
             // root module.
             .imports = &.{
-                // Here "horizon_test" is the name you will use in your source code to
-                // import this module (e.g. `@import("horizon_test")`). The name is
+                // Here "horizon_sample" is the name you will use in your source code to
+                // import this module (e.g. `@import("horizon_sample")`). The name is
                 // repeated because you are allowed to rename your imports, which
                 // can be extremely useful in case of collisions (which can happen
                 // importing modules from different packages).
-                .{ .name = "horizon_test", .module = mod },
+                .{ .name = "horizon_sample", .module = mod },
             },
         }),
     });
-    exe.root_module.addImport("horizon", horizon_dep.module("horizon"));
-    exe.root_module.addImport("pg", pg_dep.module("pg"));
+    exe.root_module.addImport("horizon", horizon.module("horizon"));
+    exe.root_module.addImport("dig", dig.module("dig"));
 
     // This declares intent for the executable to be installed into the
     // install prefix when running `zig build` (i.e. when executing the default
@@ -100,6 +104,14 @@ pub fn build(b: *std.Build) void {
     // by passing `--prefix` or `-p`.
     // Custom output directory: Install to top directory instead of zig-out
     b.installArtifact(exe);
+
+    // Install migration tool (automatically built by Dig)
+    const migrate_artifact = dig.artifact("migrate");
+    b.installArtifact(migrate_artifact);
+
+    // Install seeder tool (automatically built by Dig)
+    const seeder_artifact = dig.artifact("seeder");
+    b.installArtifact(seeder_artifact);
 
     // This creates a top level step. Top level steps have a name and can be
     // invoked by name when running `zig build` (e.g. `zig build run`).

@@ -33,12 +33,12 @@
     // internet connectivity.
     .dependencies = .{
         .horizon = .{
-            .url = "https://github.com/HARMONICOM/horizon/archive/refs/tags/v0.1.4.tar.gz",
-            .hash = "horizon-0.1.4-aaziTNW6AgBKwEiZfGdLxFW-KJOoivV8KFgKfYeQyriN",
+            .url = "https://github.com/HARMONICOM/horizon/archive/refs/tags/v0.1.5.tar.gz",
+            .hash = "horizon-0.1.5-aaziTNO6AgB8sIPA4OJM-dGl50YlFImm2D9SqjQv8-NF",
         },
-        .pg = .{
-            .url = "git+https://github.com/karlseguin/pg.zig?ref=master#f8d4892387fbad2abdf775783e101e50a7114335",
-            .hash = "pg-0.0.0-Wp_7gag6BgD_QAZrPhNNEGpnUZR_LEkKT40Ura3p-4yX",
+        .dig = .{
+            .url = "https://github.com/HARMONICOM/dig/archive/refs/tags/v0.1.0.tar.gz",
+            .hash = "dig-0.1.0-JW96hBUDBAAnpoDEjfqoTW0FaiQNjZbsIdSWWeTDYdXy",
         },
     },
     .paths = .{

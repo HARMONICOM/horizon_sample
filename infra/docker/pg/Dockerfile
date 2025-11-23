@@ -1,6 +1,6 @@
 FROM postgres:17.5-bookworm
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt update
 

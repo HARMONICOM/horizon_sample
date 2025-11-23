@@ -1,6 +1,8 @@
 volumes:
   pg_data:
     driver: local
+  mysql_data:
+    driver: local
 
 services:
   app:
@@ -9,7 +11,9 @@ services:
       dockerfile: Dockerfile
     command: /bin/bash -c "bun install && bun run front:build && zig build run"
     depends_on:
-      db:
+      pg:
+        condition: service_healthy
+      mysql:
         condition: service_healthy
       cache:
         condition: service_healthy
@@ -33,9 +37,9 @@ services:
         target: /usr/src/app
     working_dir: /usr/src/app
 
-  db:
+  pg:
     build:
-      context: ./infra/docker/db
+      context: ./infra/docker/pg
       dockerfile: Dockerfile
     healthcheck:
       test: 'pg_isready -U postgres -d $$DB_DATABASE'
@@ -57,7 +61,34 @@ services:
         source: pg_data
         target: /var/lib/postgresql/data
       - type: bind
-        source: ./infra/docker/db/docker-entrypoint-initdb.d
+        source: ./infra/docker/pg/docker-entrypoint-initdb.d
+        target: /docker-entrypoint-initdb.d
+
+  mysql:
+    build:
+      context: ./infra/docker/mysql
+      dockerfile: Dockerfile
+    healthcheck:
+      test: 'mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD'
+      interval: 10s
+      retries: 6
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '1G'
+        max-file: '1'
+    restart: always
+    shm_size: "640mb"
+    ulimits:
+      nofile:
+        soft: "65536"
+        hard: "65536"
+    volumes:
+      - type: volume
+        source: mysql_data
+        target: /var/lib/mysql
+      - type: bind
+        source: ./infra/docker/mysql/docker-entrypoint-initdb.d
         target: /docker-entrypoint-initdb.d
 
   cache:

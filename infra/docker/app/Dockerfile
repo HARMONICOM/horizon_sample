@@ -6,10 +6,12 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
-    xz-utils \
+    # default-libmysqlclient-dev \
     libpcre2-dev \
+    libpq-dev \
     pkg-config \
     unzip \
+    xz-utils \
     zip
 
 RUN apt-get clean && apt-get purge && apt-get autoremove --purge -y && \
