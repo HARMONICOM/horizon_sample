@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it } from 'bun:test'
 
 import { Login } from '../../frontend/admin/login'
 
-import { cleanup, renderWithRouter } from './test-utils'
+import { cleanup, renderWithRouter } from './testUtils'
 
 describe('Login Component', () => {
     afterEach(() => {

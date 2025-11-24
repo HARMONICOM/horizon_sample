@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it } from 'bun:test'
 
 import { Index } from '../../frontend/index'
 
-import { cleanup, renderWithRouter } from './test-utils'
+import { cleanup, renderWithRouter } from './testUtils'
 
 describe('Index Component', () => {
     afterEach(() => {

@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it } from 'bun:test'
 
 import { Admin } from '../../frontend/admin/admin'
 
-import { cleanup, renderWithRouter } from './test-utils'
+import { cleanup, renderWithRouter } from './testUtils'
 
 describe('Admin Component', () => {
     afterEach(() => {
