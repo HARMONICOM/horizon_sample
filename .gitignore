@@ -6,3 +6,4 @@ node_modules
 compose.override.yml
 horizon
 dig
+playwright-report
