@@ -5,6 +5,9 @@ const horizon_test = @import("horizon_test");
 
 const Server = horizon.Server;
 const Router = horizon.Router;
+const SessionStore = horizon.SessionStore;
+const SessionMiddleware = horizon.SessionMiddleware;
+const RedisBackend = horizon.RedisBackend;
 
 const routes = @import("routes/routes.zig").routes;
 const routes_admin = @import("routes/admin/routes.zig").routes;
@@ -39,8 +42,42 @@ pub fn main() !void {
         .format = .json,
         .custom_404_message = "Page not found",
         .custom_500_message = "Server error occurred",
+        .show_stack_trace = true,
     });
     try srv.router.middlewares.use(&error_middleware);
+
+    // Session middleware (must be before routes that use sessions)
+    // Use Redis backend for session storage
+    const redis_host = std.posix.getenv("CACHE_HOST") orelse "cache";
+    const redis_port_str = std.posix.getenv("CACHE_PORT") orelse "6379";
+    const redis_port = try std.fmt.parseInt(u16, redis_port_str, 10);
+
+    const session_ttl_str = std.posix.getenv("CACHE_TTL_SECONDS") orelse "3600";
+    const session_ttl: i64 = std.fmt.parseInt(i64, session_ttl_str, 10) catch 3600;
+
+    const redis_db_str = std.posix.getenv("CACHE_DB_NUMBER") orelse "0";
+    const redis_db: u8 = std.fmt.parseInt(u8, redis_db_str, 10) catch 0;
+
+    const redis_username = std.posix.getenv("CACHE_USERNAME");
+    const redis_password = std.posix.getenv("CACHE_PASSWORD");
+
+    var redis_backend = RedisBackend.initWithConfig(allocator, .{
+        .host = redis_host,
+        .port = redis_port,
+        .db_number = redis_db,
+        .username = redis_username,
+        .password = redis_password,
+        .prefix = "session:",
+        .default_ttl = session_ttl,
+    }) catch |err| {
+        return err;
+    };
+    defer redis_backend.deinit();
+
+    var session_store = SessionStore.initWithBackend(allocator, redis_backend.backend());
+    defer session_store.deinit();
+    const session_middleware = SessionMiddleware.init(&session_store);
+    try srv.router.middlewares.use(&session_middleware);
 
     // root routes
     try srv.router.mount("/", routes);

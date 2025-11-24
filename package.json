@@ -29,6 +29,7 @@
   "devDependencies": {
     "@eslint/js": "^9.32.0",
     "@eslint/json": "^0.12.0",
+    "@playwright/test": "^1.56.1",
     "@stylistic/eslint-plugin": "^4.4.1",
     "@types/eslint-plugin-jsx-a11y": "^6.10.0",
     "@typescript-eslint/parser": "^8.38.0",
@@ -39,6 +40,8 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "globals": "^16.3.0",
+    "jsdom": "^27.0.0",
+    "playwright": "^1.56.1",
     "stylistic": "^0.2.4",
     "typescript-eslint": "^8.38.0"
   },
@@ -48,6 +51,12 @@
     "front:build": "bunx vite build",
     "lint": "bunx eslint .",
     "lint:fix": "bunx eslint . --fix",
+    "test": "bun test ./tests/frontend/",
+    "test:e2e": "playwright test",
+    "test:e2e:chromium": "playwright test --project=chromium",
+    "test:e2e:firefox": "playwright test --project=firefox",
+    "test:e2e:report": "playwright show-report",
+    "test:e2e:webkit": "playwright test --project=webkit",
     "update:dry": "bun update --dry-run",
     "update:latest": "bun update --latest",
     "update:minor": "bun update"

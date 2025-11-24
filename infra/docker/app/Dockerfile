@@ -1,3 +1,4 @@
+FROM node:24.11.0-bookworm-slim AS node
 FROM debian:trixie-20251020-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -29,5 +30,14 @@ ENV ZIG_LOCAL_CACHE_DIR="/tmp"
 
 ENV BUN_INSTALL="/usr/local"
 RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.3.2"
+
+# Node.js インストール
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
+COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
+RUN ln -s /usr/local/bin/node /usr/local/bin/nodejs \
+  && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
+  && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npx
+
+RUN bunx playwright install --with-deps
 
 WORKDIR /usr/src/app

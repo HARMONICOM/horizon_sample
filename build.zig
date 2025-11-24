@@ -34,6 +34,11 @@ pub fn build(b: *std.Build) void {
         // .mysql = true,  // Uncomment if MySQL is needed
     });
 
+    const smtp_client = b.dependency("smtp_client", .{
+        .target = target,
+        .optimize = optimize,
+    });
+
     // This creates a module, which represents a collection of source files alongside
     // some compilation options, such as optimization mode and linked system libraries.
     // Zig modules are the preferred way of making Zig code available to consumers.
@@ -53,6 +58,8 @@ pub fn build(b: *std.Build) void {
         // which requires us to specify a target.
         .target = target,
     });
+    mod.addImport("horizon", horizon.module("horizon"));
+    mod.addImport("dig", dig.module("dig"));
 
     // Here we define an executable. An executable needs to have a root module
     // which needs to expose a `main` function. While we could add a main function
@@ -97,6 +104,7 @@ pub fn build(b: *std.Build) void {
     });
     exe.root_module.addImport("horizon", horizon.module("horizon"));
     exe.root_module.addImport("dig", dig.module("dig"));
+    exe.root_module.addImport("smtp_client", smtp_client.module("smtp_client"));
 
     // This declares intent for the executable to be installed into the
     // install prefix when running `zig build` (i.e. when executing the default
@@ -159,12 +167,71 @@ pub fn build(b: *std.Build) void {
     // A run step that will run the second test executable.
     const run_exe_tests = b.addRunArtifact(exe_tests);
 
+    // Backend test executables
+    const users_test_module = b.createModule(.{
+        .root_source_file = b.path("tests/backend/users_test.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+    users_test_module.addImport("horizon_sample", mod);
+    users_test_module.addImport("horizon", horizon.module("horizon"));
+    users_test_module.addImport("dig", dig.module("dig"));
+    const users_test = b.addTest(.{
+        .root_module = users_test_module,
+    });
+    const run_users_test = b.addRunArtifact(users_test);
+
+    const passwordResetTokens_test_module = b.createModule(.{
+        .root_source_file = b.path("tests/backend/passwordResetTokens_test.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+    passwordResetTokens_test_module.addImport("horizon_sample", mod);
+    passwordResetTokens_test_module.addImport("horizon", horizon.module("horizon"));
+    passwordResetTokens_test_module.addImport("dig", dig.module("dig"));
+    const passwordResetTokens_test = b.addTest(.{
+        .root_module = passwordResetTokens_test_module,
+    });
+    passwordResetTokens_test.linkLibC();
+    passwordResetTokens_test.linkSystemLibrary("pcre2-8");
+    const run_passwordResetTokens_test = b.addRunArtifact(passwordResetTokens_test);
+
+    const db_test_module = b.createModule(.{
+        .root_source_file = b.path("tests/backend/db_test.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+    db_test_module.addImport("horizon_sample", mod);
+    db_test_module.addImport("horizon", horizon.module("horizon"));
+    db_test_module.addImport("dig", dig.module("dig"));
+    const db_test = b.addTest(.{
+        .root_module = db_test_module,
+    });
+    const run_db_test = b.addRunArtifact(db_test);
+
+    const routes_test_module = b.createModule(.{
+        .root_source_file = b.path("tests/backend/routes_test.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+    routes_test_module.addImport("horizon_sample", mod);
+    routes_test_module.addImport("horizon", horizon.module("horizon"));
+    routes_test_module.addImport("dig", dig.module("dig"));
+    const routes_test = b.addTest(.{
+        .root_module = routes_test_module,
+    });
+    const run_routes_test = b.addRunArtifact(routes_test);
+
     // A top level step for running all tests. dependOn can be called multiple
     // times and since the two run steps do not depend on one another, this will
     // make the two of them run in parallel.
     const test_step = b.step("test", "Run tests");
     test_step.dependOn(&run_mod_tests.step);
     test_step.dependOn(&run_exe_tests.step);
+    test_step.dependOn(&run_users_test.step);
+    test_step.dependOn(&run_passwordResetTokens_test.step);
+    test_step.dependOn(&run_db_test.step);
+    test_step.dependOn(&run_routes_test.step);
 
     // Just like flags, top level steps are also listed in the `--help` menu.
     //

@@ -1,4 +1,5 @@
 /** @jsxImportSource react */
+
 import './index.css'
 
 import { createRoot } from 'react-dom/client'
@@ -8,8 +9,6 @@ import {
     Routes,
 } from 'react-router-dom'
 
-import { Admin } from './admin'
-
 import { Index } from './index'
 
 const AppRoutes = (props: any) => {  // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -17,7 +16,6 @@ const AppRoutes = (props: any) => {  // eslint-disable-line @typescript-eslint/n
         <BrowserRouter>
             <Routes>
                 <Route element={<Index {...props} />} path='/' />
-                <Route element={<Admin {...props} />} path='/admin' />
             </Routes>
         </BrowserRouter>
     )

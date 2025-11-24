@@ -22,10 +22,10 @@ pub fn getUsersHandler(context: *Context) Errors.Horizon!void {
     defer result.deinit();
 
     // Build JSON response
-    var users_list = std.ArrayList(u8).init(context.allocator);
-    defer users_list.deinit();
+    var users_list = try std.ArrayList(u8).initCapacity(context.allocator, 1024);
+    defer users_list.deinit(context.allocator);
 
-    var writer = users_list.writer();
+    var writer = users_list.writer(context.allocator);
     try writer.writeAll("[");
 
     for (result.rows, 0..) |row, i| {
@@ -52,7 +52,7 @@ pub fn getUsersHandler(context: *Context) Errors.Horizon!void {
 
     // Send JSON response
     try context.response.setHeader("Content-Type", "application/json");
-    try context.response.send(try users_list.toOwnedSlice());
+    try context.response.send(try users_list.toOwnedSlice(context.allocator));
 }
 
 /// Get a single user by ID
@@ -80,10 +80,10 @@ pub fn getUserHandler(context: *Context) Errors.Horizon!void {
     const row = result.rows[0];
 
     // Build JSON response
-    var user_json = std.ArrayList(u8).init(context.allocator);
-    defer user_json.deinit();
+    var user_json = try std.ArrayList(u8).initCapacity(context.allocator, 512);
+    defer user_json.deinit(context.allocator);
 
-    var writer = user_json.writer();
+    var writer = user_json.writer(context.allocator);
     try writer.writeAll("{");
 
     if (row.get("id")) |id| {
@@ -103,7 +103,7 @@ pub fn getUserHandler(context: *Context) Errors.Horizon!void {
 
     // Send JSON response
     try context.response.setHeader("Content-Type", "application/json");
-    try context.response.send(try user_json.toOwnedSlice());
+    try context.response.send(try user_json.toOwnedSlice(context.allocator));
 }
 
 /// Create a new user

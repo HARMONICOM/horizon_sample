@@ -32,13 +32,17 @@
     // Once all dependencies are fetched, `zig build` no longer requires
     // internet connectivity.
     .dependencies = .{
+        .smtp_client = .{
+            .url = "https://github.com/karlseguin/smtp_client.zig/archive/refs/heads/master.tar.gz",
+            .hash = "smtp_client-0.0.1-Vh9B1FJoAQDzqtA5h83FmVfheRMNdiMG4RKyfhVTutwY",
+        },
         .horizon = .{
-            .url = "https://github.com/HARMONICOM/horizon/archive/refs/tags/v0.1.5.tar.gz",
-            .hash = "horizon-0.1.5-aaziTNO6AgB8sIPA4OJM-dGl50YlFImm2D9SqjQv8-NF",
+            .url = "https://github.com/HARMONICOM/horizon/archive/refs/tags/v0.1.6.tar.gz",
+            .hash = "horizon-0.1.6-aaziTFMCAwCIMgVsbMnWabgDkkUC93s8s99yO_sJqInF",
         },
         .dig = .{
-            .url = "https://github.com/HARMONICOM/dig/archive/refs/tags/v0.1.0.tar.gz",
-            .hash = "dig-0.1.0-JW96hBUDBAAnpoDEjfqoTW0FaiQNjZbsIdSWWeTDYdXy",
+            .url = "https://github.com/HARMONICOM/dig/archive/refs/tags/v0.1.1.tar.gz",
+            .hash = "dig-0.1.1-JW96hEkJBAAL1dZ3Wx17LcNYsNAKnA23mqTjhcXSLvEz",
         },
     },
     .paths = .{

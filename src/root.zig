@@ -1,6 +1,29 @@
 //! By convention, root.zig is the root source file when making a library.
 const std = @import("std");
 
+// Re-export dependencies for sub-modules
+pub const horizon = @import("horizon");
+pub const dig = @import("dig");
+
+// Export models for testing
+pub const models = struct {
+    pub const users = @import("models/users.zig");
+    pub const passwordResetTokens = @import("models/passwordResetTokens.zig");
+};
+
+// Export utils for testing
+pub const utils = struct {
+    pub const db = @import("utils/db.zig");
+};
+
+// Export routes for testing
+pub const routes = struct {
+    pub const index = @import("routes/index.zig");
+    pub const api = struct {
+        pub const index = @import("routes/api/index.zig");
+    };
+};
+
 pub fn bufferedPrint() !void {
     // Stdout is for the actual output of your application, for example if you
     // are implementing gzip, then only the compressed bytes should be sent to

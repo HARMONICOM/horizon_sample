@@ -44,17 +44,42 @@ exec:
 	@exit 3
 
 run:
-	docker compose run --rm --service-ports app $(filter-out $@,$(MAKECMDGOALS))
+	docker compose run --rm app $(filter-out $@,$(MAKECMDGOALS))
 	@exit 3
 
 zig:
-	docker compose run --rm --service-ports app zig $(filter-out $@,$(MAKECMDGOALS))
+	docker compose run --rm app zig $(filter-out $@,$(MAKECMDGOALS))
 	@exit 3
 
 bun:
-	docker compose run --rm --service-ports app bun $(filter-out $@,$(MAKECMDGOALS))
+	docker compose run --rm app bun $(filter-out $@,$(MAKECMDGOALS))
 	@exit 3
 
 logs:
 	docker compose logs -f $(filter-out $@,$(MAKECMDGOALS))
 	@exit 3
+
+front-build:
+	docker compose run --rm app bun run front:build
+
+front-lint:
+	docker compose run --rm app bun run lint:fix
+
+front-test:
+	docker compose run --rm app bun run test
+
+e2e:
+	make down
+	docker compose run --rm app bash -c " \
+		zig build run & \
+		sleep 15 && \
+		bun run test:e2e:chromium \
+	"
+
+e2e-all:
+	make down
+	docker compose run --rm app bash -c " \
+		zig build run & \
+		sleep 15 && \
+		bun run test:e2e \
+	"

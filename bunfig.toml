@@ -1,0 +1,7 @@
+# Bun configuration file
+# This file configures Bun's behavior
+
+[test]
+# Enable DOM globals for testing React components
+dom = true
+
