@@ -7,3 +7,4 @@ compose.override.yml
 horizon
 dig
 playwright-report
+test-results
