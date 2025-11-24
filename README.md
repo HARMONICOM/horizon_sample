@@ -149,16 +149,8 @@ make e2e-all
 │   ├── routes.tsx
 │   └── index.css
 ├── public/                      # Served build artifacts
-│   ├── assets/                  # Bundled vendor JS/CSS
-│   ├── index.js
-│   ├── script.js
-│   ├── static.html
-│   └── styles.css
 ├── static/                      # Raw static files
-│   ├── assets/
-│   ├── script.js
-│   ├── static.html
-│   └── styles.css
+│   └── static.html
 ├── database/                    # Database files
 │   ├── migrations/              # Migration SQL files
 │   │   └── 20251122_create_table_users.sql
@@ -199,14 +191,6 @@ make e2e-all
 │           ├── postgresql.conf
 │           └── docker-entrypoint-initdb.d/
 │               └── 00_create_database.sql
-├── dig/                         # Dig ORM module (dependency)
-├── horizon/                     # Horizon framework module (dependency)
-├── node_modules/                # Node.js dependencies
-├── zig-out/                     # Build output directory
-│   └── bin/
-│       ├── horizon_sample
-│       ├── migrate
-│       └── seeder
 ├── build.zig                    # Zig build configuration
 ├── build.zig.zon                # Zig module definition
 ├── package.json                 # Frontend tooling config
@@ -245,7 +229,6 @@ Frontend dependencies are managed in `package.json` and installed via Bun. Key d
 - TailwindCSS & DaisyUI
 - React Router
 - React Hook Form
-- Zod
 - Vite
 - Playwright
 
@@ -357,6 +340,7 @@ This sample application demonstrates:
    - Functions: `PascalCase` (e.g., `HandleSubmit`)
    - Constants: `SCREAMING_SNAKE_CASE` (e.g., `API_BASE_URL`)
    - Variables: `camelCase` (e.g., `userName`)
+   - File names: `camelCase` (e.g., `loggingMiddleware.tsx`) *Test files should end with `.test.tsx`
 
 2. **Code Style**
    - Follow ESLint configuration in `eslint.config.ts`
@@ -372,7 +356,7 @@ This sample application demonstrates:
 1. **Zig Version**: This project is developed with Zig 0.15.2
 2. **Docker Environment**: It is recommended to develop in Docker containers
 3. **Memory Safety**: Zig does not guarantee memory safety, so careful coding is required
-4. **Dependencies**: This project depends on local `horizon` and `dig` modules (referenced via paths in `build.zig.zon`)
+4. **Dependencies**: This project depends on `Horizon` and `Dig` modules (referenced in `build.zig.zon`)
 5. **Database**: Both PostgreSQL and MySQL are available, but PostgreSQL is enabled by default in `build.zig`
 6. **Frontend Build**: Frontend is built using Vite and served as static files by the Horizon backend
 
@@ -381,6 +365,8 @@ This sample application demonstrates:
 - [Zig Official Documentation](https://ziglang.org/documentation/)
 - [Zig Standard Library](https://ziglang.org/documentation/master/std/)
 - [Zig Learn](https://ziglearn.org/)
+- [Horizon Documentation](https://harmonicom.github.io/horizon/)
+- [Dig Documentation](https://harmonicom.github.io/dig/)
 - [React Documentation](https://react.dev/)
 - [Vite Documentation](https://vitejs.dev/)
 - [Bun Documentation](https://bun.sh/docs)
