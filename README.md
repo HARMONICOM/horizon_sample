@@ -169,7 +169,7 @@ make e2e-all
 │   │   ├── admin.test.tsx
 │   │   ├── index.test.tsx
 │   │   ├── login.test.tsx
-│   │   └── test-utils.tsx
+│   │   └── testUtils.tsx
 │   └── e2e/                     # E2E test files (Playwright)
 │       ├── admin.spec.ts
 │       ├── api.spec.ts
