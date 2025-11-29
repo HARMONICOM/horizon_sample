@@ -1,13 +1,27 @@
 /** @jsxImportSource react */
 
+import { useState } from 'react'
+
+import type { FormEvent } from 'react'
+
 type RequestPasswordResetProps = {
     error?: string;
     success?: string;
 }
 
 export const RequestPasswordReset = (props: RequestPasswordResetProps) => {
+    const [isSubmitting, setIsSubmitting] = useState(false)
     const error = props.error || ''
     const success = props.success || ''
+
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        // Prevent double submission
+        if (isSubmitting) {
+            e.preventDefault()
+            return
+        }
+        setIsSubmitting(true)
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
@@ -28,7 +42,7 @@ export const RequestPasswordReset = (props: RequestPasswordResetProps) => {
                     </div>
                 )}
 
-                <form action="/admin/change-password/submit" method="POST">
+                <form action="/admin/change-password/submit" method="POST" onSubmit={handleSubmit}>
                     <div className="mb-5">
                         <label className="block text-gray-700 font-medium mb-2" htmlFor="email">
                             Email Address
@@ -37,6 +51,9 @@ export const RequestPasswordReset = (props: RequestPasswordResetProps) => {
                             className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-gray-400 transition-colors text-gray-900"
                             id="email"
                             name="email"
+                            readOnly={isSubmitting}
+                            required
+                            type="email"
                         />
                         <p className="mt-2 text-sm text-gray-600">
                             Please enter your registered email address. We will send a password reset link.
@@ -44,10 +61,11 @@ export const RequestPasswordReset = (props: RequestPasswordResetProps) => {
                     </div>
 
                     <button
-                        className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold py-3 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl"
+                        className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold py-3 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-lg"
+                        disabled={isSubmitting}
                         type="submit"
                     >
-                        Send Reset Email
+                        {isSubmitting ? 'Sending...' : 'Send Reset Email'}
                     </button>
                 </form>
 

@@ -29,9 +29,9 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
         // Enable database drivers as needed (both disabled by default)
-        // This example uses PostgreSQL
-        .postgresql = true,
-        // .mysql = true,  // Uncomment if MySQL is needed
+        // This example uses MySQL
+        // .postgresql = true,
+        .mysql = true,
     });
 
     const smtp_client = b.dependency("smtp_client", .{

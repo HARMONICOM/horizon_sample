@@ -42,4 +42,3 @@ pub fn logoutCompletePageHandler(context: *Context) Errors.Horizon!void {
         .props = props_json,
     });
 }
-

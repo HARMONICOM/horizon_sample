@@ -7,7 +7,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
-    # default-libmysqlclient-dev \
+    default-libmysqlclient-dev \
     libpcre2-dev \
     libpq-dev \
     pkg-config \

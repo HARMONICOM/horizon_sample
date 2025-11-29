@@ -37,12 +37,12 @@
             .hash = "smtp_client-0.0.1-Vh9B1FJoAQDzqtA5h83FmVfheRMNdiMG4RKyfhVTutwY",
         },
         .horizon = .{
-            .url = "https://github.com/HARMONICOM/horizon/archive/refs/tags/v0.1.6.tar.gz",
-            .hash = "horizon-0.1.6-aaziTFMCAwCIMgVsbMnWabgDkkUC93s8s99yO_sJqInF",
+            .url = "https://github.com/HARMONICOM/horizon/archive/refs/tags/v0.1.7.tar.gz",
+            .hash = "horizon-0.1.7-aaziTImIAwAXltE3CvmMVSzYr1G5LvmeKJu3tB47Tafh",
         },
         .dig = .{
-            .url = "https://github.com/HARMONICOM/dig/archive/refs/tags/v0.1.1.tar.gz",
-            .hash = "dig-0.1.1-JW96hEkJBAAL1dZ3Wx17LcNYsNAKnA23mqTjhcXSLvEz",
+            .url = "https://github.com/HARMONICOM/dig/archive/refs/tags/v0.1.2.tar.gz",
+            .hash = "dig-0.1.2-JW96hHdQBACsCEJcvHYlS19rtIJhMFx8xGCU1dLylzFf",
         },
     },
     .paths = .{

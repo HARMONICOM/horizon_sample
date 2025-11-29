@@ -40,12 +40,14 @@ pub fn loadEmailConfig(allocator: std.mem.Allocator) !EmailConfig {
     const username_env = std.posix.getenv("MAIL_USERNAME");
     const username = if (username_env) |u|
         if (u.len > 0) try allocator.dupe(u8, u) else null
-    else null;
+    else
+        null;
 
     const password_env = std.posix.getenv("MAIL_PASSWORD");
     const password = if (password_env) |p|
         if (p.len > 0) try allocator.dupe(u8, p) else null
-    else null;
+    else
+        null;
 
     const from_address_env = std.posix.getenv("MAIL_FROM_ADDRESS") orelse "noreply@localhost";
     const from_address = try allocator.dupe(u8, from_address_env);

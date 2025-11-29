@@ -132,6 +132,11 @@ pub fn loginHandler(context: *Context) Errors.Horizon!void {
         try session.set("user_id", user.?.id);
         try session.set("user_email", user.?.email);
         try session.set("logged_in", "true");
+
+        // Manually set Set-Cookie header before redirect to ensure it's sent
+        const cookie = try std.fmt.allocPrint(context.allocator, "session_id={s}; Path=/; Max-Age=3600; HttpOnly", .{session.id});
+        defer context.allocator.free(cookie);
+        try context.response.setHeader("Set-Cookie", cookie);
     } else {
         // Set flash message in session
         if (SessionMiddleware.getSession(context.request)) |session| {

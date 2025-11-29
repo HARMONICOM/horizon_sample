@@ -56,4 +56,3 @@ test "generateToken - generates multiple unique tokens" {
         }
     }
 }
-

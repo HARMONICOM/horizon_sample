@@ -103,7 +103,11 @@ pub fn requestPasswordResetHandler(context: *Context) Errors.Horizon!void {
             defer context.allocator.free(decoded_value);
 
             if (std.mem.eql(u8, key, "email")) {
-                email_address = try context.allocator.dupe(u8, decoded_value);
+                // Trim whitespace and check if not empty
+                const trimmed = std.mem.trim(u8, decoded_value, " \t\n\r");
+                if (trimmed.len > 0) {
+                    email_address = try context.allocator.dupe(u8, trimmed);
+                }
             }
         }
     }

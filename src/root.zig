@@ -22,6 +22,13 @@ pub const routes = struct {
     pub const api = struct {
         pub const index = @import("routes/api/index.zig");
     };
+    pub const admin = struct {
+        pub const routes = @import("routes/admin/routes.zig");
+        pub const index = @import("routes/admin/index.zig");
+        pub const dashboard = @import("routes/admin/dashboard.zig");
+        pub const logout = @import("routes/admin/logout.zig");
+        pub const passwordReset = @import("routes/admin/passwordReset.zig");
+    };
 };
 
 pub fn bufferedPrint() !void {

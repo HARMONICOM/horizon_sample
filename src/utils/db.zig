@@ -4,13 +4,23 @@ const horizon = @import("horizon");
 
 /// Get database connection configuration
 pub fn getConfig() dig.types.ConnectionConfig {
+    const db_type_str = std.posix.getenv("DB_TYPE") orelse "mysql";
+    const database_type: dig.types.DatabaseType = if (std.mem.eql(u8, db_type_str, "postgresql"))
+        .postgresql
+    else if (std.mem.eql(u8, db_type_str, "mysql"))
+        .mysql
+    else
+        .mysql; // default to mysql
+
+    const default_port: u16 = if (database_type == .postgresql) 5432 else 3306;
+
     return dig.types.ConnectionConfig{
-        .database_type = .postgresql,
-        .port = 5432,
-        .host = std.posix.getenv("DB_HOST") orelse "127.0.0.1",
-        .database = std.posix.getenv("DB_DATABASE") orelse "postgres",
-        .username = std.posix.getenv("DB_USER") orelse "postgres",
-        .password = std.posix.getenv("DB_PASSWORD") orelse "postgres",
+        .database_type = database_type,
+        .port = default_port,
+        .host = std.posix.getenv("DB_HOST") orelse "",
+        .database = std.posix.getenv("DB_DATABASE") orelse "",
+        .username = std.posix.getenv("DB_USERNAME") orelse "",
+        .password = std.posix.getenv("DB_PASSWORD") orelse "",
     };
 }
 

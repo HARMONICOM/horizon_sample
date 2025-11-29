@@ -14,11 +14,17 @@ export const ResetPassword = (props: ResetPasswordProps) => {
     const [newPassword, setNewPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [error, setError] = useState(props.error || '')
+    const [isSubmitting, setIsSubmitting] = useState(false)
     const success = props.success || ''
     const token = props.token || ''
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+
+        // Prevent double submission
+        if (isSubmitting) {
+            return
+        }
 
         // Validation
         if (newPassword.length < 6) {
@@ -30,6 +36,9 @@ export const ResetPassword = (props: ResetPasswordProps) => {
             setError('New passwords do not match')
             return
         }
+
+        // Set submitting state
+        setIsSubmitting(true)
 
         // 一時的なフォームを作成してサブミット（React Routerを完全にバイパス）
         const tempForm = document.createElement('form')
@@ -117,10 +126,11 @@ export const ResetPassword = (props: ResetPasswordProps) => {
                     </div>
 
                     <button
-                        className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold py-3 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl"
+                        className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold py-3 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-lg"
+                        disabled={isSubmitting}
                         type="submit"
                     >
-                        Change Password
+                        {isSubmitting ? 'Changing Password...' : 'Change Password'}
                     </button>
                 </form>
 

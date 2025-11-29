@@ -187,4 +187,3 @@ pub fn deleteUserHandler(context: *Context) Errors.Horizon!void {
     try context.response.setHeader("Content-Type", "application/json");
     try context.response.send("{\"message\":\"User deleted successfully\"}");
 }
-
