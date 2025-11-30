@@ -14,6 +14,7 @@ pub const models = struct {
 // Export utils for testing
 pub const utils = struct {
     pub const db = @import("utils/db.zig");
+    pub const email = @import("utils/email.zig");
 };
 
 // Export routes for testing

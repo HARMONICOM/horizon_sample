@@ -60,6 +60,7 @@ pub fn build(b: *std.Build) void {
     });
     mod.addImport("horizon", horizon.module("horizon"));
     mod.addImport("dig", dig.module("dig"));
+    mod.addImport("smtp_client", smtp_client.module("smtp_client"));
 
     // Here we define an executable. An executable needs to have a root module
     // which needs to expose a `main` function. While we could add a main function
@@ -120,6 +121,18 @@ pub fn build(b: *std.Build) void {
     // Install seeder tool (automatically built by Dig)
     const seeder_artifact = dig.artifact("seeder");
     b.installArtifact(seeder_artifact);
+
+    // Hash password utility
+    const hash_password = b.addExecutable(.{
+        .name = "hash_password",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/hash_password.zig"),
+            .target = target,
+            .optimize = optimize,
+        }),
+    });
+    hash_password.root_module.addImport("horizon", horizon.module("horizon"));
+    b.installArtifact(hash_password);
 
     // This creates a top level step. Top level steps have a name and can be
     // invoked by name when running `zig build` (e.g. `zig build run`).
@@ -222,6 +235,47 @@ pub fn build(b: *std.Build) void {
     });
     const run_routes_test = b.addRunArtifact(routes_test);
 
+    const admin_routes_test_module = b.createModule(.{
+        .root_source_file = b.path("tests/backend/admin_routes_test.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+    admin_routes_test_module.addImport("horizon_sample", mod);
+    admin_routes_test_module.addImport("horizon", horizon.module("horizon"));
+    admin_routes_test_module.addImport("dig", dig.module("dig"));
+    admin_routes_test_module.addImport("smtp_client", smtp_client.module("smtp_client"));
+    const admin_routes_test = b.addTest(.{
+        .root_module = admin_routes_test_module,
+    });
+    const run_admin_routes_test = b.addRunArtifact(admin_routes_test);
+
+    const email_test_module = b.createModule(.{
+        .root_source_file = b.path("tests/backend/email_test.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+    email_test_module.addImport("horizon_sample", mod);
+    email_test_module.addImport("horizon", horizon.module("horizon"));
+    email_test_module.addImport("dig", dig.module("dig"));
+    email_test_module.addImport("smtp_client", smtp_client.module("smtp_client"));
+    const email_test = b.addTest(.{
+        .root_module = email_test_module,
+    });
+    const run_email_test = b.addRunArtifact(email_test);
+
+    const password_reset_full_test_module = b.createModule(.{
+        .root_source_file = b.path("tests/backend/password_reset_full_test.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+    password_reset_full_test_module.addImport("horizon_sample", mod);
+    password_reset_full_test_module.addImport("horizon", horizon.module("horizon"));
+    password_reset_full_test_module.addImport("dig", dig.module("dig"));
+    const password_reset_full_test = b.addTest(.{
+        .root_module = password_reset_full_test_module,
+    });
+    const run_password_reset_full_test = b.addRunArtifact(password_reset_full_test);
+
     // A top level step for running all tests. dependOn can be called multiple
     // times and since the two run steps do not depend on one another, this will
     // make the two of them run in parallel.
@@ -232,6 +286,9 @@ pub fn build(b: *std.Build) void {
     test_step.dependOn(&run_passwordResetTokens_test.step);
     test_step.dependOn(&run_db_test.step);
     test_step.dependOn(&run_routes_test.step);
+    test_step.dependOn(&run_admin_routes_test.step);
+    test_step.dependOn(&run_email_test.step);
+    test_step.dependOn(&run_password_reset_full_test.step);
 
     // Just like flags, top level steps are also listed in the `--help` menu.
     //

@@ -72,14 +72,20 @@ e2e:
 	make down
 	docker compose run --rm app bash -c " \
 		zig build run & \
-		sleep 15 && \
-		bun run test:e2e:chromium \
+		sleep 15; \
+		zig-out/bin/migrate up; \
+		zig-out/bin/seeder run test; \
+		bun run test:e2e:chromium; \
+		zig-out/bin/migrate down; \
 	"
 
 e2e-all:
 	make down
 	docker compose run --rm app bash -c " \
 		zig build run & \
-		sleep 15 && \
-		bun run test:e2e \
+		sleep 15; \
+		zig-out/bin/migrate up; \
+		zig-out/bin/seeder run test; \
+		bun run test:e2e; \
+		zig-out/bin/migrate down; \
 	"

@@ -108,10 +108,11 @@ describe('Admin Component', () => {
         )
 
         const headers = container.querySelectorAll('thead th')
-        expect(headers.length).toBe(3)
+        expect(headers.length).toBe(4)
         expect(headers[0]?.textContent?.trim()).toBe('ID')
         expect(headers[1]?.textContent?.trim()).toBe('Name')
         expect(headers[2]?.textContent?.trim()).toBe('Email')
+        expect(headers[3]?.textContent?.trim()).toBe('Actions')
     })
 })
 

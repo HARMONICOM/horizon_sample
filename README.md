@@ -139,12 +139,12 @@ make e2e-all
 ├── frontend/                    # Frontend source code
 │   ├── admin/                   # Admin frontend
 │   │   ├── admin.tsx
+│   │   ├── index.css
 │   │   ├── login.tsx
 │   │   ├── logoutComplete.tsx
 │   │   ├── requestPasswordReset.tsx
 │   │   ├── resetPassword.tsx
-│   │   ├── routes.tsx
-│   │   └── index.css
+│   │   └── routes.tsx
 │   ├── index.tsx                # Main frontend entry
 │   ├── routes.tsx
 │   └── index.css
@@ -157,7 +157,9 @@ make e2e-all
 │   └── seeders/                 # Seeder SQL files
 │       ├── development/
 │       │   └── 01_seed_users.sql
-│       └── production/
+│       ├── production/
+│       │   └── 01_seed_users.sql
+│       └── test/
 │           └── 01_seed_admin.sql
 ├── tests/                       # Test files
 │   ├── backend/                 # Backend test files (Zig)
@@ -195,6 +197,7 @@ make e2e-all
 ├── build.zig.zon                # Zig module definition
 ├── package.json                 # Frontend tooling config
 ├── bun.lock                     # Bun dependency lockfile
+├── bunfig.toml                  # Bun configuration
 ├── tsconfig.json                # TypeScript config
 ├── eslint.config.ts             # ESLint shared config
 ├── vite.config.ts               # Vite dev server config
