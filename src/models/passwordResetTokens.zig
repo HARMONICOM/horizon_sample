@@ -2,6 +2,7 @@ const std = @import("std");
 const crypto = std.crypto;
 const dig = @import("dig");
 const horizon = @import("horizon");
+const sunrise = @import("sunrise");
 const db = @import("../utils/db.zig");
 
 pub const PasswordResetToken = struct {
@@ -35,8 +36,8 @@ pub fn createToken(allocator: std.mem.Allocator, user_id: []const u8) horizon.Er
     errdefer allocator.free(token);
 
     // Token expires in 24 hours
-    const expires_at_timestamp = std.time.timestamp() + (24 * 60 * 60);
-    const expires_at_str = try horizon.formatTimestamp(allocator, expires_at_timestamp);
+    const expires_at_timestamp = sunrise.DateTime.now().addDays(1).toTimestamp();
+    const expires_at_str = try sunrise.DateTime.fromTimestamp(expires_at_timestamp).formatWithOptions(allocator, .{});
     defer allocator.free(expires_at_str);
 
     var conn = db.connect(allocator) catch |err| {
@@ -109,7 +110,7 @@ pub fn getTokenByToken(allocator: std.mem.Allocator, token_str: []const u8) hori
         else => try allocator.dupe(u8, ""),
     };
     const expires_at_int = switch (expires_at_value) {
-        .text => |t| horizon.parseTimestamp(t),
+        .text => |t| (sunrise.DateTime.parse(t, .{}) catch sunrise.DateTime.fromTimestamp(0)).toTimestamp(),
         .integer => |i| i,
         .null => @as(i64, 0),
         else => @as(i64, 0),
@@ -121,7 +122,7 @@ pub fn getTokenByToken(allocator: std.mem.Allocator, token_str: []const u8) hori
         else => false,
     };
     const created_at_int = switch (created_at_value) {
-        .text => |t| horizon.parseTimestamp(t),
+        .text => |t| (sunrise.DateTime.parse(t, .{}) catch sunrise.DateTime.fromTimestamp(0)).toTimestamp(),
         .integer => |i| i,
         .null => @as(i64, 0),
         else => @as(i64, 0),

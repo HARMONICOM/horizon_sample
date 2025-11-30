@@ -1,6 +1,15 @@
 const std = @import("std");
 const dig = @import("dig");
 const horizon = @import("horizon");
+const builtin = @import("builtin");
+
+/// Thread-local mock connection for testing
+threadlocal var test_mock_connection: ?*dig.mock.MockConnection = null;
+
+/// Set mock connection for testing
+pub fn setTestMockConnection(mock_conn: ?*dig.mock.MockConnection) void {
+    test_mock_connection = mock_conn;
+}
 
 /// Get database connection configuration
 pub fn getConfig() dig.types.ConnectionConfig {
@@ -24,8 +33,21 @@ pub fn getConfig() dig.types.ConnectionConfig {
     };
 }
 
-/// Connect to database
+/// Connect to database (returns mock connection during tests)
 pub fn connect(allocator: std.mem.Allocator) dig.errors.DigError!dig.db {
+    // Use mock database type during tests
+    if (builtin.is_test) {
+        const mock_config = dig.types.ConnectionConfig{
+            .database_type = .mock,
+            .port = 0,
+            .host = "",
+            .database = "",
+            .username = "",
+            .password = "",
+        };
+        return try dig.db.connect(allocator, mock_config);
+    }
+
     const config = getConfig();
     return try dig.db.connect(allocator, config);
 }

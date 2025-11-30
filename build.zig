@@ -39,6 +39,11 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
+    const sunrise = b.dependency("sunrise", .{
+        .target = target,
+        .optimize = optimize,
+    });
+
     // This creates a module, which represents a collection of source files alongside
     // some compilation options, such as optimization mode and linked system libraries.
     // Zig modules are the preferred way of making Zig code available to consumers.
@@ -61,6 +66,7 @@ pub fn build(b: *std.Build) void {
     mod.addImport("horizon", horizon.module("horizon"));
     mod.addImport("dig", dig.module("dig"));
     mod.addImport("smtp_client", smtp_client.module("smtp_client"));
+    mod.addImport("sunrise", sunrise.module("sunrise"));
 
     // Here we define an executable. An executable needs to have a root module
     // which needs to expose a `main` function. While we could add a main function
@@ -106,6 +112,7 @@ pub fn build(b: *std.Build) void {
     exe.root_module.addImport("horizon", horizon.module("horizon"));
     exe.root_module.addImport("dig", dig.module("dig"));
     exe.root_module.addImport("smtp_client", smtp_client.module("smtp_client"));
+    exe.root_module.addImport("sunrise", sunrise.module("sunrise"));
 
     // This declares intent for the executable to be installed into the
     // install prefix when running `zig build` (i.e. when executing the default
@@ -202,6 +209,7 @@ pub fn build(b: *std.Build) void {
     passwordResetTokens_test_module.addImport("horizon_sample", mod);
     passwordResetTokens_test_module.addImport("horizon", horizon.module("horizon"));
     passwordResetTokens_test_module.addImport("dig", dig.module("dig"));
+    passwordResetTokens_test_module.addImport("sunrise", sunrise.module("sunrise"));
     const passwordResetTokens_test = b.addTest(.{
         .root_module = passwordResetTokens_test_module,
     });
@@ -244,6 +252,7 @@ pub fn build(b: *std.Build) void {
     admin_routes_test_module.addImport("horizon", horizon.module("horizon"));
     admin_routes_test_module.addImport("dig", dig.module("dig"));
     admin_routes_test_module.addImport("smtp_client", smtp_client.module("smtp_client"));
+    admin_routes_test_module.addImport("sunrise", sunrise.module("sunrise"));
     const admin_routes_test = b.addTest(.{
         .root_module = admin_routes_test_module,
     });

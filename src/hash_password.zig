@@ -21,4 +21,3 @@ pub fn main() !void {
 
     std.debug.print("{s}\n", .{hash});
 }
-

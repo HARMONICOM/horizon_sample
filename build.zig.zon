@@ -44,6 +44,10 @@
             .url = "https://github.com/HARMONICOM/dig/archive/refs/tags/v0.1.2.tar.gz",
             .hash = "dig-0.1.2-JW96hHdQBACsCEJcvHYlS19rtIJhMFx8xGCU1dLylzFf",
         },
+        .sunrise = .{
+            .url = "https://github.com/HARMONICOM/sunrise/archive/refs/tags/v0.1.0.tar.gz",
+            .hash = "sunrise-0.1.0-j95werBQAQBWac29YpRTVbObG1M8IM8ghRAC1o6RE6Uo",
+        },
     },
     .paths = .{
         "build.zig",

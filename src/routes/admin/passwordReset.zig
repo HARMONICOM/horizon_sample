@@ -1,5 +1,6 @@
 const std = @import("std");
 const horizon = @import("horizon");
+const sunrise = @import("sunrise");
 const users = @import("../../models/users.zig");
 const passwordResetTokens = @import("../../models/passwordResetTokens.zig");
 const email = @import("../../utils/email.zig");
@@ -221,8 +222,9 @@ pub fn resetPasswordPageHandler(context: *Context) Errors.Horizon!void {
         return;
     }
 
-    const now = std.time.timestamp();
-    if (token_data.?.expires_at < now) {
+    const now = sunrise.DateTime.now();
+    const expires_at = sunrise.DateTime.fromTimestamp(token_data.?.expires_at);
+    if (expires_at.isBefore(now)) {
         // Set flash message in session
         if (SessionMiddleware.getSession(context.request)) |session| {
             try session.set("flash_error", "Token has expired");
@@ -375,8 +377,9 @@ pub fn resetPasswordHandler(context: *Context) Errors.Horizon!void {
         return;
     }
 
-    const now = std.time.timestamp();
-    if (token_data.?.expires_at < now) {
+    const now_reset = sunrise.DateTime.now();
+    const expires_at_reset = sunrise.DateTime.fromTimestamp(token_data.?.expires_at);
+    if (expires_at_reset.isBefore(now_reset)) {
         // Set flash message in session
         if (SessionMiddleware.getSession(context.request)) |session| {
             try session.set("flash_error", "Token has expired");
